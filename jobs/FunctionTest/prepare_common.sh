@@ -1,9 +1,9 @@
 #!/bin/bash -ex
-export VCOMPUTE=("${NODE_NAME}-Rinjin1","${NODE_NAME}-Rinjin2","${NODE_NAME}-Quanta")
+export VCOMPUTE=("${NODE_NAME}-Quanta1","${NODE_NAME}-Quanta2","${NODE_NAME}-Quanta3")
 
 VCOMPUTE="${VCOMPUTE}"
 if [ -z "${VCOMPUTE}" ]; then
-  VCOMPUTE=("jvm-Quanta_T41-1" "jvm-vRinjin-1" "jvm-vRinjin-2")
+  VCOMPUTE=("jvm-Quanta_T41-1" "jvm-Quanta_T41-2" "jvm-Quanta_T41-3")
 fi
 
 
