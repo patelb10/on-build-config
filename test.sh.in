@@ -276,7 +276,7 @@ runTests() {
          echo "Test FIT failed running deploy/rackhd_stack_init.py"
          exit 1
      fi
-     sleep 4800
+     #sleep 4800
      python run_tests.py ${TEST_GROUP} ${tstack} -v 4 -xunit
      if [ $? -ne 0 ]; then
          echo "Test FIT failed running smoke test"
