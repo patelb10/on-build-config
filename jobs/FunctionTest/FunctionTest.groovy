@@ -110,8 +110,8 @@ def functionTest(String test_name, String label_name, String TEST_GROUP, Boolean
                                     def exists = fileExists 'RackHD'
                                     if( !exists ){
                                         echo "Checkout RackHD for un-src test."
-                                        def url = "https://github.com/RackHD/RackHD.git"
-                                        def branch = "master"
+                                        def url = "https://github.com/patelb10/RackHD.git"
+                                        def branch = "RAC-4965"
                                         def targetDir = "RackHD"
                                         env.RackHD_DIR = targetDir
                                         shareMethod.checkout(url, branch, targetDir)
