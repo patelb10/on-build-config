@@ -146,11 +146,8 @@ def functionTest(String test_name, String label_name, String TEST_GROUP, Boolean
                                         if (env.DOCKER_IMAGES.contains("http")){
                                             sh 'wget -c -nv -O rackhd_docker_images.tar $DOCKER_IMAGES'
                                             env.DOCKER_PATH = pwd() + "/rackhd_docker_images.tar"
-                                            //sh 'wget -c -nv -O build_record $DOCKER_BUILD_RECORD'
-                                            //env.DOCKER_RECORD_PATH = pwd() + "/build_record"
                                         } else {
                                             env.DOCKER_PATH = "$env.DOCKER_IMAGES"
-                                            // env.DOCKER_RECORD_PATH = "$env.DOCKER_BUILD_RECORD"
                                         } 
                                     } else {
                                         unstash "$docker_stash_name"
