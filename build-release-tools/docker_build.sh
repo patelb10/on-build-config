@@ -21,7 +21,6 @@ IS_OFFICIAL_RELEASE=${IS_OFFICIAL_RELEASE:=false}
 
 BUILD_NIGHTLY=false
 BUILD_LATEST=false
-BUILD_POSTTEST=${IMAGE_TAG}
 
 tagCalculate() {
     repo=$1
@@ -68,8 +67,6 @@ doBuild() {
             PKG_TAG=""
             if [ "$BUILD_NIGHTLY" == true ]; then
                 TAG=:nightly
-            elif [[ ! -z $BUILD_POSTTEST ]] ; then
-                TAG=:$BUILD_POSTTEST
             elif [ "$BUILD_LATEST" != true ]; then
                 tagCalculate $repo
                 TAG=:${PKG_TAG}
@@ -125,10 +122,8 @@ if [[ "$IS_OFFICIAL_RELEASE" == true ]];then
     doBuild
 else
     # nightly tag is for nightly build.
-    if [[ -z $BUILD_POSTTEST ]];then
-        BUILD_NIGHTLY=true
-        doBuild
-    fi
+    BUILD_NIGHTLY=true
+    doBuild
 fi
 # Build ends
 popd
