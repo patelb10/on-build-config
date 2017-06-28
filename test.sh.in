@@ -92,7 +92,6 @@ execWithTimeout() {
   fi
   set -e
 }
-
 ucsReset() {
   cd ${WORKSPACE}/build-config/deployment/
   if [ "${USE_VCOMPUTE}" != "false" ]; then
@@ -101,7 +100,6 @@ ucsReset() {
     done
   fi
 }
-
 nodesOff() {
   cd ${WORKSPACE}/build-config/deployment/
   if [ "${USE_VCOMPUTE}" != "false" ]; then
@@ -113,7 +111,6 @@ nodesOff() {
      sleep 5
   fi
 }
-
 nodesOn() {
   cd ${WORKSPACE}/build-config/deployment/
   if [ "${USE_VCOMPUTE}" != "false" ]; then
@@ -125,7 +122,6 @@ nodesOn() {
      sleep 5
   fi
 }
-
 nodesDelete() {
   cd ${WORKSPACE}/build-config/deployment/
   if [ "${USE_VCOMPUTE}" != "false" ]; then
@@ -137,7 +133,6 @@ nodesDelete() {
     done
   fi
 }
-
 nodesCreate() {
   cd ${WORKSPACE}/build-config/deployment/
   if [ "${USE_VCOMPUTE}" != "false" ]; then
@@ -150,7 +145,6 @@ nodesCreate() {
     nodesOff
   fi
 }
-
 vnc_record_start(){
   mkdir -p ${WORKSPACE}/build-log
   pushd ${WORKSPACE}/build-config 
@@ -160,7 +154,6 @@ vnc_record_start(){
   fi
   bash vnc_record.sh ${WORKSPACE}/build-log $fname_prefix &
 }
-
 vnc_record_stop(){
   #sleep 2 sec to ensure FLV finishes the disk I/O before VM destroyed
   set +e
@@ -168,30 +161,25 @@ vnc_record_stop(){
   sleep 2
   set -e
 }
-
 generateSolLog(){
   pushd ${WORKSPACE}/build-config
   bash generate-sol-log.sh > ${WORKSPACE}/sol.log &
 }
-
 generateSolLogStop(){
   set +e
   pkill -f SCREEN
 }
-
 generateSysLog(){
   set +e
   containerId=$( echo $SUDO_PASSWORD |sudo -S docker ps|grep "my/test" | awk '{print $1}' )
   echo $SUDO_PASSWORD |sudo -S docker exec -it $containerId dmesg > ${WORKSPACE}/build-log/dmesg.log
 }
-
 generateMongoLog(){
   set +e
   containerId=$( echo $SUDO_PASSWORD |sudo -S docker ps|grep "my/test" | awk '{print $1}' )
   echo $SUDO_PASSWORD |sudo -S docker cp $containerId:/var/log/mongodb ${WORKSPACE}/build-log
   echo $SUDO_PASSWORD |sudo -S chown -R $USER:$USER ${WORKSPACE}/build-log/mongodb
 }
-
 generateRackHDLog(){
   set +e
   containerId=$( echo $SUDO_PASSWORD |sudo -S docker ps|grep "my/test" | awk '{print $1}' )
@@ -199,7 +187,6 @@ generateRackHDLog(){
   echo $SUDO_PASSWORD |sudo -S chown -R $USER:$USER ${WORKSPACE}/build-log/logs
   mv ${WORKSPACE}/build-log/logs/*.log ${WORKSPACE}/build-log
 }
-
 setupVirtualEnv(){
   pushd ${WORKSPACE}/RackHD/test
   rm -rf .venv/on-build-config
@@ -210,44 +197,19 @@ setupVirtualEnv(){
       apiPackageModify
   fi
 }
-
 BASE_REPO_URL="${BASE_REPO_URL}"
 runTests() {
   set +e
   netstat -ntlp
   args=()
-  #if [ ! -z "$1" ];then
-  #    args+="$1"
-  #fi
-  if [ "$RUN_FIT_TEST" == true ] ; then
-     cd ${WORKSPACE}/RackHD/test
-     #TODO Parameterize FIT args
-     tstack="${TEST_STACK}"
-     read hwarray<<<"${EXTRA_HW}"
-     for item in $hwarray; do
-         if [ "${item}" == "ucs" ] && [ "${TEST_STACK}" == "-stack vagrant" ]; then
-             tstack="-stack vagrant_ucs"
-         fi
-     done
-     python run_tests.py -test deploy/rackhd_stack_init.py ${tstack} -xunit
-     if [ $? -ne 0 ]; then
-         echo "Test FIT failed running deploy/rackhd_stack_init.py"
-         exit 1
-     fi
-     python run_tests.py ${TEST_GROUP} ${tstack} -v 4 -xunit
-     if [ $? -ne 0 ]; then
-         echo "Test FIT failed running smoke test"
-         exit 1
-     fi
-     mkdir -p ${WORKSPACE}/xunit-reports
-     cp *.xml ${WORKSPACE}/xunit-reports
+  if [ ! -z "$1" ];then
+      args+="$1"
   fi
   if [ "$RUN_FIT_TEST" == true ] ; then
       fitSmokeTest "${args}"
   fi
   set -e
 }
-
 waitForAPI() {
   timeout=0
   maxto=60
@@ -267,7 +229,6 @@ waitForAPI() {
     exit 1
   fi
 }
-
 ######################################
 #    OVA POST SMOKE TEST RELATED     #
 ######################################
@@ -290,7 +251,6 @@ portForwarding(){
     echo "7080->7080"
     echo "27017->37017"
 }
-
 fetchOVALog(){
     ansible_workspace=${WORKSPACE}/build-config/jobs/build_ova/ansible
     # fetch rackhd log
@@ -303,7 +263,6 @@ fetchOVALog(){
       done
     popd
 }
-
 dockerUp(){
     pushd $WORKSPACE
     echo $SUDO_PASSWORD |sudo -S docker load -i rackhd_pipeline_docker.tar
@@ -315,7 +274,6 @@ dockerUp(){
     echo $SUDO_PASSWORD |sudo -S docker run --net=host -v /etc/localtime:/etc/localtime:ro -d -t my/test
     popd
 }
-
 setupTestsConfig(){
     RACKHD_DHCP_HOST_IP=$(ifconfig | awk '/inet addr/{print substr($2,6)}' |grep 172.31.128)
     sed -i "s/172.31.128.1/${RACKHD_DHCP_HOST_IP}/g" ${WORKSPACE}/build-config/jobs/pr_gate/docker/monorail/config.json
@@ -329,7 +287,6 @@ setupTestsConfig(){
         popd
     fi
 }
-
 collectTestReport()
 {
     pushd ${WORKSPACE}/RackHD/test
@@ -337,7 +294,6 @@ collectTestReport()
     cp *.xml ${WORKSPACE}/xunit-reports
     popd
 }
-
 fitSmokeTest()
 {
     set +e
